@@ -1,0 +1,24 @@
+---
+- name: Configure root login sshd
+  tags: sshd
+  template:
+    src: sshd_config.d/root.conf
+    dest: /etc/ssh/sshd_config.d/root.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart sshd
+
+- name: Configure TrustedUserCA for sshd
+  tags: sshd
+  template:
+    src: "sshd_config.d/{{ item }}"
+    dest: "/etc/ssh/sshd_config.d/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  loop:
+   - trustedUserCA.conf
+   - trustedUserCAKeys.pub
+  notify: restart sshd
+  when: sshTrustedUserCAKeys is defined and sshTrustedUserCAKeys != ""

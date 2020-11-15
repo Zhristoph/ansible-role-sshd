@@ -1,0 +1,2 @@
+sshPermitRootLogin: "no"
+sshTrustedUserCAKeys: []
