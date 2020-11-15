@@ -1,0 +1,67 @@
+---
+- name: Configure sshd for sftpChroot
+  tags: sftpChroot
+  template:
+    src: sshd_config.d/sftp.conf
+    dest: /etc/ssh/sshd_config.d/sftp.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart sshd
+
+- name: Create directory for sftpChroot
+  tags: sftpChroot
+  file:
+    dest: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  loop:
+   - "{{ sftpChrootGroupParentDir }}{{ sftpChrootGroup }}"
+
+- name: Make directories for sftpChroot users
+  tags: sftpChroot
+  file:
+    dest: "{{ sftpChrootGroupParentDir }}{{ sftpChrootGroup }}/{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  loop: "{{ sftpChrootUsers }}"
+
+- name: Set sftpChrootGroup variable
+  tags: sftpChroot
+  set_fact:
+    sftpChrootGroup: sftpChroot
+
+- name: Ensure group "sftpChroot" exists
+  tags: sftpChroot
+  group:
+    name: "{{ sftpChrootGroup }}"
+    state: present
+
+- name: Add sftpChroot users
+  tags: sftpChroot
+  user:
+    name: "{{ item }}"
+    groups: "{{ sftpChrootGroup }}"
+    append: True
+    home: "{{ sftpChrootGroupParentDir }}{{ sftpChrootGroup }}/{{ item }}"
+    create_home: False
+  loop: "{{ sftpChrootUsers }}"
+   
+- name: Set directories for sftpChroot users
+  tags: sftpChroot
+  vars:
+    sftpChrootUserDirectories:
+     - backstage
+     - public
+     - .ssh
+  file:
+    dest: "{{ sftpChrootGroupParentDir }}{{ sftpChrootGroup }}/{{ item }}"
+    state: directory
+    owner: "{{ item.split('/')[0] }}"
+    group: "{{ item.split('/')[0] }}"
+    mode: 0755
+  loop: "{{ sftpChrootUsers | product(sftpChrootUserDirectories)| map('join', '/') | list }}"

@@ -1,4 +1,7 @@
 ---
+- include: sftp.yml
+  when: sftpChrootUsers is defined and sftpChrootUsers != []
+
 - name: Configure root login sshd
   tags: sshd
   template:

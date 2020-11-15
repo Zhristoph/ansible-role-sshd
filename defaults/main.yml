@@ -1,2 +1,7 @@
+
+sftpChrootGroup: sftpChroot
+sftpChrootUsers: []
+sftpChrootGroupParentDir: "/srv/"
+
 sshPermitRootLogin: "no"
 sshTrustedUserCAKeys: []
