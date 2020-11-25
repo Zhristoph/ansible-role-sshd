@@ -3,5 +3,6 @@ sftpChrootGroup: sftpChroot
 sftpChrootUsers: []
 sftpChrootGroupParentDir: "/srv/"
 
+sshAuthenticationMethods: "publickey"
 sshPermitRootLogin: "no"
 sshTrustedUserCAKeys: []
