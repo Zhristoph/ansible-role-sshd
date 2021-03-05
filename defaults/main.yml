@@ -6,3 +6,4 @@ sftpChrootGroupParentDir: "/srv/"
 sshAuthenticationMethods: "publickey"
 sshPermitRootLogin: "no"
 sshTrustedUserCAKeys: []
+sshVariousConfig: ""
