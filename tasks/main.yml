@@ -24,4 +24,4 @@
    - trustedUserCA.conf
    - trustedUserCAKeys.pub
   notify: restart sshd
-  when: sshTrustedUserCAKeys is defined and sshTrustedUserCAKeys != ""
+  when: sshTrustedUserCAKeys is defined and sshTrustedUserCAKeys != []
