@@ -5,11 +5,14 @@
 - name: Configure root login sshd
   tags: sshd
   template:
-    src: sshd_config.d/root.conf
-    dest: /etc/ssh/sshd_config.d/root.conf
+    src: "sshd_config.d/{{ item }}"
+    dest: "/etc/ssh/sshd_config.d/{{ item }}"
     owner: root
     group: root
     mode: 0644
+  loop:
+   - root.conf
+   - auth.conf
   notify: restart sshd
 
 - name: Configure TrustedUserCA for sshd
@@ -25,3 +28,16 @@
    - trustedUserCAKeys.pub
   notify: restart sshd
   when: sshTrustedUserCAKeys is defined and sshTrustedUserCAKeys != []
+
+- name: Deploy various config for sshd
+  tags: sshd
+  template:
+    src: "sshd_config.d/{{ item }}"
+    dest: "/etc/ssh/sshd_config.d/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  loop:
+   - various.conf
+  notify: restart sshd
+  when: sshVariousConfig is defined and sshVariousConfig != ""
